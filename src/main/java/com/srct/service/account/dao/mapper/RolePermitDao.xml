@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.mapper.RolePermitDao">
+  <resultMap id="BaseResultMap" type="com.srct.service.account.dao.entity.RolePermit">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    <id column="permit_id" jdbcType="INTEGER" property="permitId" />
+    <id column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="valid" jdbcType="TINYINT" property="valid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    permit_id, role_id, `valid`
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    update ac_role_permit
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="`valid` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when permit_id = #{item.permitId,jdbcType=INTEGER} then #{item.valid,jdbcType=TINYINT}
+        </foreach>
+      </trim>
+    </trim>
+    where permit_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.permitId,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    insert into ac_role_permit
+    (permit_id, role_id, `valid`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.permitId,jdbcType=INTEGER}, #{item.roleId,jdbcType=INTEGER}, #{item.valid,jdbcType=TINYINT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" parameterType="com.srct.service.account.dao.entity.RolePermit">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    insert into ac_role_permit
+    (permit_id, role_id, `valid`)
+    values
+    (#{permitId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{valid,jdbcType=TINYINT}
+      )
+    on duplicate key update
+    permit_id = #{permitId,jdbcType=INTEGER},
+    role_id = #{roleId,jdbcType=INTEGER},
+    `valid` = #{valid,jdbcType=TINYINT}
+  </insert>
+  <insert id="insertOrUpdateSelective" parameterType="com.srct.service.account.dao.entity.RolePermit">
+    <!--@mbg.generated generated on Fri Jul 26 17:55:10 CST 2019.-->
+    insert into ac_role_permit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permitId != null">
+        permit_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="valid != null">
+        `valid`,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permitId != null">
+        #{permitId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null">
+        #{valid,jdbcType=TINYINT},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="permitId != null">
+        permit_id = #{permitId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null">
+        `valid` = #{valid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>
