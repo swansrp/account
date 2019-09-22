@@ -49,22 +49,33 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     public void validate(HttpServletRequest request, HttpServletResponse response, Auth.AuthType authType) {
-        enableCrossDomain(response);
         String url = request.getRequestURI();
         String method = request.getMethod();
         String queryString = request.getQueryString();
         Map<String, String> headersInfoMap = HttpUtil.getHeadersInfoMap(request);
         ClientTypeHolder.set(headersInfoMap.get(RequestConst.CLIENT_TYPE));
-        if (!Auth.AuthType.NONE.equals(authType)) {
-            authType = updateAuthTypeByServiceApi(method, url, headersInfoMap);
-        }
         String userId = headersInfoMap.get(RequestConst.USER_ID);
         traceRequest(method, url, queryString, userId, authType);
+        if (!Auth.AuthType.NONE.equals(authType)) {
+            authType = updateAuthTypeByServiceApi(method, url, headersInfoMap, authType);
+        }
         validateAuthType(method, url, headersInfoMap, authType);
     }
 
+    @Override
+    public void enableCrossDomain(HttpServletResponse response) {
+        String url = request.getRequestURI();
+        String method = request.getMethod();
+        String queryString = request.getQueryString();
+        Map<String, String> headersInfoMap = HttpUtil.getHeadersInfoMap(request);
+        log.info("[{}] {}?{}", method, url, queryString);
+        log.info("Header: {}", JSONUtil.toJSONString(headersInfoMap));
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", RequestConst.getAllHeader());
+    }
+
     private void traceRequest(String method, String url, String queryString, String userId, Auth.AuthType authType) {
-        log.debug("[{}] {}?{} -> {}-{}", method, url, queryString, userId, authType);
+        log.info("[{}] {}?{} -> {}-{}", method, url, queryString, userId, authType);
     }
 
     private void validateAuthType(String method, String url, Map<String, String> headersInfoMap,
@@ -130,13 +141,15 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         tokenService.setToken(token);
     }
 
-    private void enableCrossDomain(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-    }
-
-    private Auth.AuthType updateAuthTypeByServiceApi(String method, String url, Map<String, String> headerMap) {
+    private Auth.AuthType updateAuthTypeByServiceApi(String method, String url, Map<String, String> headerMap,
+            Auth.AuthType defaultAuthType) {
         String apiVersion = MapUtils.getString(headerMap, RequestConst.API_VERSION);
-        ServiceApi serviceApi = frameCacheService.getServiceApi(method, url, apiVersion);
+        ServiceApi serviceApi;
+        try {
+            serviceApi = frameCacheService.getServiceApi(method, url, apiVersion);
+        } catch (Exception e) {
+            return defaultAuthType;
+        }
         if (StringUtil.convertSwitch(serviceApi.getNeedPermit())) {
             return Auth.AuthType.USER;
         } else if (StringUtil.convertSwitch(serviceApi.getNeedLogin())) {

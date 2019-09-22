@@ -16,6 +16,13 @@ public class RequestConst {
     public static final String AUTHORIZATION = "authorization";
     public static final String CLIENT_TYPE = "client-type";
 
+    public static final String CONTENT_TYPE = "content-type";
+
     public static final String SERVICE_API = "serviceApi";
     public static final String OBJECT = "object";
+
+    public static String getAllHeader() {
+        return TOKEN + ", " + API_VERSION + ", " + USER_ID + ", " + AUTHORIZATION + ", " + CLIENT_TYPE + ", "
+                + CONTENT_TYPE;
+    }
 }

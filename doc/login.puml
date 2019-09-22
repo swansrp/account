@@ -1,0 +1,16 @@
+@startuml
+title 获取TOKEN
+Actor "用户" as user
+participant  "WEB/APP" as view order 50
+participant  "SERVER" as back order 100
+
+view -> back: /token
+back -> view: token
+view -> back: /captcha.jpg?captchaType=&token=
+back -> view: captcha
+view -> back: /msgCode?graphCode=&msgCodeType=&phoneNumber=&token=
+back -> user: msgCode
+view -> back: [x-access-token] /login/msg?loginMsgCode=&phoneNumber=
+back -> view: userId accessToken refreshToken
+@enduml
+
