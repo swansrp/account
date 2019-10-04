@@ -23,6 +23,10 @@ public enum AccountParamConst implements Param {
     WEB_REFRESH_TOKEN_EXPIRED,
     // 微信小程序 access_token有效期
     WECHAT_TOKEN_EXPIRED,
+    // IOT token有效期
+    IOT_TOKEN_EXPIRED,
+    // IOT token期望更新周期
+    IOT_TOKEN_UPDATE_EXPIRED,
 
 
     // 密码输入错误锁定次数

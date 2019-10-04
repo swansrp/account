@@ -47,6 +47,12 @@ public class UserService extends BaseRepository<UserDao, User> {
         return super.selectOneByPropertyMap(propertyMap);
     }
 
+    public User getUserByGuid(String guid) {
+        Map<String, Object> propertyMap = new HashMap<>(1);
+        propertyMap.put("guid", guid);
+        return super.selectOneByPropertyMap(propertyMap);
+    }
+
     public int insertOrUpdate(User record) {
         return userDao.insertOrUpdate(record);
     }
@@ -64,6 +70,7 @@ public class UserService extends BaseRepository<UserDao, User> {
         return userDao;
     }
 }
+
 
 
 

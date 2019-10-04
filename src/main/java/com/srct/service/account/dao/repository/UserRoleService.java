@@ -45,35 +45,13 @@ public class UserRoleService extends BaseRepository<UserRoleDao, UserRole> {
         return userRoleDao.insertOrUpdateSelective(record);
     }
 
-    @Override
-    protected UserRoleDao getDao() {
-        return userRoleDao;
-    }
-
     public UserRole getUserRoleByRoleId(Integer roleId) {
         return getUserRoleByRoleIdAndUserId(roleId, null);
-    }
-
-    public List<UserRole> getUserRoleListByRoleId(Integer roleId) {
-        return getUserRoleListByRoleIdAndUserId(roleId, null);
-    }
-
-    public UserRole getUserRoleByUserId(Integer userId) {
-        return getUserRoleByRoleIdAndUserId(null, userId);
-    }
-
-    public List<UserRole> getUserRoleListByUserId(Integer userId) {
-        return getUserRoleListByRoleIdAndUserId(null, userId);
     }
 
     public UserRole getUserRoleByRoleIdAndUserId(Integer roleId, Integer userId) {
         Example example = buildExample(roleId, userId);
         return selectOneByExample(example);
-    }
-
-    public List<UserRole> getUserRoleListByRoleIdAndUserId(Integer roleId, Integer userId) {
-        Example example = buildExample(roleId, userId);
-        return selectByExample(example);
     }
 
     private Example buildExample(Integer roleId, Integer userId) {
@@ -89,5 +67,26 @@ public class UserRoleService extends BaseRepository<UserRoleDao, UserRole> {
         return example;
     }
 
+    public List<UserRole> getUserRoleListByRoleId(Integer roleId) {
+        return getUserRoleListByRoleIdAndUserId(roleId, null);
+    }
+
+    public List<UserRole> getUserRoleListByRoleIdAndUserId(Integer roleId, Integer userId) {
+        Example example = buildExample(roleId, userId);
+        return selectByExample(example);
+    }
+
+    public UserRole getUserRoleByUserId(Integer userId) {
+        return getUserRoleByRoleIdAndUserId(null, userId);
+    }
+
+    public List<UserRole> getUserRoleListByUserId(Integer userId) {
+        return getUserRoleListByRoleIdAndUserId(null, userId);
+    }
+
+    @Override
+    protected UserRoleDao getDao() {
+        return userRoleDao;
+    }
 
 }

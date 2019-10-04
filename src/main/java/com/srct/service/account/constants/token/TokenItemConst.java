@@ -21,5 +21,11 @@ public enum TokenItemConst implements Dict {
     // 登录短信验证码,
     LOGIN_MSG_CODE,
     // 找回密码短信验证码,
-    FIND_PASSWORD_MSG_CODE
+    FIND_PASSWORD_MSG_CODE,
+    // IOT token刷新时间戳
+    IOT_TOKEN_NEED_UPDATE_TIMESTAMP,
+    // IOT deviceId
+    IOT_DEVICE_ID,
+    // IOT 待更新的token
+    IOT_UPDATE_TOKEN,
 }

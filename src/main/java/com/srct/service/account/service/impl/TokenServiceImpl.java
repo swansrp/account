@@ -66,6 +66,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public String buildIotToken() {
+        return buildToken(TokenTypeConst.IOT_TOKEN);
+    }
+
+    @Override
     public <T> T getItem(String token, String itemKey, Class<?> collectionClass, Class<?>... elementClasses) {
         Map<String, Object> map = getTokenValue(token);
         Validator.assertNotEmpty(map, ErrCodeSys.PA_DATA_NOT_EXIST, "token内容");

@@ -78,8 +78,7 @@ public class LoginServiceImpl implements LoginService {
         if (user == null) {
             user = createUser(phoneNumber);
         } else {
-            user.setStatus(CommonConst.YES);
-            user.setPasswordErrorTimes(0);
+            setUserLoginSuccessfully(user);
             userService.updateByPrimaryKeySelective(user);
         }
         Log.ii(user);
@@ -106,6 +105,34 @@ public class LoginServiceImpl implements LoginService {
         return buildLoginRes(user);
     }
 
+    private User createUser(String userId, String password) {
+        User user = buildBaseUser();
+        user.setUserId(userId);
+        user.setPassword(MD5Util.generate(password));
+        userService.insertOrUpdateSelective(user);
+        bindDefaultRole(user);
+        return user;
+    }
+
+    private User createUser(String phoneNumber) {
+        User user = buildBaseUser();
+        user.setPhone(phoneNumber);
+        user.setUserId(phoneNumber);
+        userService.insertOrUpdateSelective(user);
+        bindDefaultRole(user);
+        return user;
+    }
+
+    private User buildBaseUser() {
+        User user = new User();
+        user.setGuid(RandomUtil.getUUID());
+        user.setCustomerNo(commonSeqService.getSeq(AccountSeqConst.CUSTOMER_NUMBER_SEQ.name()));
+        user.setStatus(CommonConst.YES);
+        user.setPasswordErrorTimes(0);
+        user.setValid(DataSourceCommonConstant.DATABASE_COMMON_VALID);
+        return user;
+    }
+
     private void bindDefaultRole(User user) {
         Integer defaultRoleId = frameCacheService.getParamInt(AccountParamConst.ACCOUNT_DEFAULT_ROLE_ID);
         UserRole userRole = new UserRole();
@@ -113,6 +140,42 @@ public class LoginServiceImpl implements LoginService {
         userRole.setRoleId(defaultRoleId);
         userRole.setValid(DataSourceCommonConstant.DATABASE_COMMON_VALID);
         userRoleService.insertOrUpdate(userRole);
+    }
+
+    private void verifyPassword(User user, String password) {
+        if (MD5Util.verify(password, user.getPassword())) {
+            setUserLoginSuccessfully(user);
+        } else {
+            int passwordMistakeMaxTime = frameCacheService.getParamInt(AccountParamConst.ACCOUNT_LOCK_MISTAKE_NUMBER);
+            user.setPasswordErrorTimes(user.getPasswordErrorTimes() + 1);
+            if (user.getPasswordErrorTimes() >= passwordMistakeMaxTime) {
+                user.setStatus(CommonConst.NO);
+            }
+            user.setPasswordErrorLastTime(new Date());
+            userService.updateByPrimaryKeySelective(user);
+            Validator.assertException(AccountErrCode.AC_PASSWORD_MISTAKE);
+        }
+    }
+
+    private LoginRes buildLoginRes(User user) {
+        LoginRes res = new LoginRes();
+        BeanUtil.copyProperties(user, res);
+        fillToken(res);
+        return res;
+    }
+
+    private void setUserLoginSuccessfully(User user) {
+        user.setStatus(CommonConst.YES);
+        user.setPasswordErrorTimes(0);
+        user.setLastLoginTime(new Date());
+    }
+
+    private void fillToken(LoginRes res) {
+        String accessToken = buildAccessToken(res.getUserId());
+        String refreshToken = buildRefreshToken(res.getUserId());
+        res.setAccessToken(accessToken);
+        res.setRefreshToken(refreshToken);
+        buildPermitTree(res.getUserId(), accessToken);
     }
 
     private String buildAccessToken(String userId) {
@@ -129,30 +192,6 @@ public class LoginServiceImpl implements LoginService {
         return accessToken;
     }
 
-    private User buildBaseUser() {
-        User user = new User();
-        user.setGuid(RandomUtil.getUUID());
-        user.setCustomerNo(commonSeqService.getSeq(AccountSeqConst.CUSTOMER_NUMBER_SEQ.name()));
-        user.setStatus(CommonConst.YES);
-        user.setPasswordErrorTimes(0);
-        user.setValid(DataSourceCommonConstant.DATABASE_COMMON_VALID);
-        return user;
-    }
-
-    private LoginRes buildLoginRes(User user) {
-        LoginRes res = new LoginRes();
-        BeanUtil.copyProperties(user, res);
-        fillToken(res);
-        return res;
-    }
-
-    private void buildPermitTree(String userId, String accessToken) {
-        String clientType = getClientType();
-        List<PermitBO> permitList = permitCoreService.getPermitList(userId, clientType);
-        Validator.assertNotEmpty(permitList, AccountErrCode.AC_NO_PERMIT_TREE);
-        tokenService.putItem(accessToken, TokenItemConst.PERMIT_TREE.name(), permitList);
-    }
-
     private String buildRefreshToken(String userId) {
         String refreshToken = null;
         String clientType = getClientType();
@@ -165,51 +204,16 @@ public class LoginServiceImpl implements LoginService {
         return refreshToken;
     }
 
-    private User createUser(String phoneNumber) {
-        User user = buildBaseUser();
-        user.setPhone(phoneNumber);
-        user.setUserId(phoneNumber);
-        userService.insertOrUpdateSelective(user);
-        bindDefaultRole(user);
-        return user;
-    }
-
-    private User createUser(String userId, String password) {
-        User user = buildBaseUser();
-        user.setUserId(userId);
-        user.setPassword(MD5Util.generate(password));
-        userService.insertOrUpdateSelective(user);
-        bindDefaultRole(user);
-        return user;
-    }
-
-    private void fillToken(LoginRes res) {
-        String accessToken = buildAccessToken(res.getUserId());
-        String refreshToken = buildRefreshToken(res.getUserId());
-        res.setAccessToken(accessToken);
-        res.setRefreshToken(refreshToken);
-        buildPermitTree(res.getUserId(), accessToken);
+    private void buildPermitTree(String userId, String accessToken) {
+        String clientType = getClientType();
+        List<PermitBO> permitList = permitCoreService.getPermitList(userId, clientType);
+        Validator.assertNotEmpty(permitList, AccountErrCode.AC_NO_PERMIT_TREE);
+        tokenService.putItem(accessToken, TokenItemConst.PERMIT_TREE.name(), permitList);
     }
 
     private String getClientType() {
         String clientType = ClientTypeHolder.get();
         Validator.assertNotNull(clientType, ErrCodeSys.PA_DATA_NOT_EXIST, "客户端类型");
         return clientType;
-    }
-
-    private void verifyPassword(User user, String password) {
-        if (MD5Util.verify(password, user.getPassword())) {
-            user.setStatus(CommonConst.YES);
-            user.setPasswordErrorTimes(0);
-        } else {
-            int passwordMistakeMaxTime = frameCacheService.getParamInt(AccountParamConst.ACCOUNT_LOCK_MISTAKE_NUMBER);
-            user.setPasswordErrorTimes(user.getPasswordErrorTimes() + 1);
-            if (user.getPasswordErrorTimes() >= passwordMistakeMaxTime) {
-                user.setStatus(CommonConst.NO);
-            }
-            user.setPasswordErrorLastTime(new Date());
-            userService.updateByPrimaryKeySelective(user);
-            Validator.assertException(AccountErrCode.AC_PASSWORD_MISTAKE);
-        }
     }
 }

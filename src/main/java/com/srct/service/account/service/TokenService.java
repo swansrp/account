@@ -49,6 +49,13 @@ public interface TokenService {
     String buildWechatToken();
 
     /**
+     * 获取IOT token
+     *
+     * @return iot Token string
+     */
+    String buildIotToken();
+
+    /**
      * 获取token map中itemKey内容
      *
      * @param <T>             the type parameter

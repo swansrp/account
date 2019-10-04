@@ -161,4 +161,22 @@
       </if>
     </trim>
   </insert>
+    <sql id="Join_Column_List">
+        <!--@mbg.generated-->
+        ac_role.id as ac_role_id,
+        ac_role.parent_role_id as ac_role_parent_role_id,
+        ac_role.name as ac_role_name,
+        ac_role.create_time as ac_role_create_time,
+        ac_role.last_update_time as ac_role_last_update_time,
+        ac_role.valid as ac_role_valid
+    </sql>
+    <resultMap id="JoinResultMap" type="com.srct.service.account.dao.entity.Role">
+        <!--@mbg.generated-->
+        <id column="ac_role_id" property="id"/>
+        <result column="ac_role_parent_role_id" property="parentRoleId"/>
+        <result column="ac_role_name" property="name"/>
+        <result column="ac_role_create_time" property="createTime"/>
+        <result column="ac_role_last_update_time" property="lastUpdateTime"/>
+        <result column="ac_role_valid" property="valid"/>
+    </resultMap>
 </mapper>

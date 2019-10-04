@@ -24,6 +24,8 @@ public enum TokenTypeConst implements Dict {
     APP_ACCESS_TOKEN,
     // 应用刷新token
     APP_REFRESH_TOKEN,
+    // iot token
+    IOT_TOKEN,
 
 
 }

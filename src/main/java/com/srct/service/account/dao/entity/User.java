@@ -6,6 +6,15 @@ import java.util.Date;
 import javax.persistence.*;
 import lombok.Data;
 
+/**
+ * Title: User
+ * Description: Copyright: Copyright (c) 2019 Company: BHFAE
+ *
+ * @author Sharp
+ * @date 2019/10/3 19:30
+ * @description Project Name: Grote
+ * @Package: com.srct.service.account.dao.entity
+ */
 @ApiModel(value = "com.srct.service.account.dao.entity.User")
 @Data
 @Table(name = "ac_user")
@@ -90,10 +99,10 @@ public class User {
     private String appKey;
 
     /**
-     * openAPI serect
+     * openAPI secret
      */
     @Column(name = "app_secret")
-    @ApiModelProperty(value = "openAPI serect")
+    @ApiModelProperty(value = "openAPI secret")
     private String appSecret;
 
     /**
@@ -123,6 +132,13 @@ public class User {
     @Column(name = "password_update_last_time")
     @ApiModelProperty(value = "上次密码修改时间")
     private Date passwordUpdateLastTime;
+
+    /**
+     * 上次登录时间
+     */
+    @Column(name = "last_login_time")
+    @ApiModelProperty(value = "上次登录时间")
+    private Date lastLoginTime;
 
     /**
      * 状态 0 禁用 1 可用
