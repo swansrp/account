@@ -1,6 +1,6 @@
 package com.srct.service.account.config.response;
 
-import com.srct.service.account.service.IotTokenService;
+import com.srct.service.account.service.IotAuthService;
 import com.srct.service.account.vo.iot.IotBaseResp;
 import com.srct.service.config.annotation.Auth;
 import com.srct.service.config.response.CommonResponse;
@@ -28,7 +28,7 @@ import javax.annotation.Resource;
 public class IotResponseAdvice implements ResponseBodyAdvice {
 
     @Resource
-    private IotTokenService iotTokenService;
+    private IotAuthService iotAuthService;
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class aClass) {
@@ -45,7 +45,7 @@ public class IotResponseAdvice implements ResponseBodyAdvice {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (o instanceof CommonResponse.Resp) {
             if (((CommonResponse.Resp) o).data instanceof IotBaseResp) {
-                String updateSwitch = iotTokenService.getTokenUpdateSwitch();
+                String updateSwitch = iotAuthService.getTokenUpdateSwitch();
                 ((IotBaseResp) ((CommonResponse.Resp) o).data).setTokenUpdateSwitch(updateSwitch);
             }
         }

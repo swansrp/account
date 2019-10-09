@@ -21,6 +21,8 @@ public enum ClientTypeConst implements Dict {
     // WEB
     WEB,
     // IOT
-    IOT
+    IOT,
+    // PLATFORM
+    PLATFORM
 
 }

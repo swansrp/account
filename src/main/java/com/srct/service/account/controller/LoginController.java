@@ -76,7 +76,7 @@ public class LoginController {
         String token = tokenService.getToken();
         msgVerificationService
                 .validateMsgCode(token, msgLoginReq.getLoginMsgCode(), MsgVerificationType.LOGIN_MSG_CODE);
-        LoginRes res = loginService.login(msgLoginReq.getPhoneNumber());
+        LoginRes res = loginService.loginOrReg(msgLoginReq.getPhoneNumber());
         return CommonExceptionHandler.generateResponse(res);
     }
 

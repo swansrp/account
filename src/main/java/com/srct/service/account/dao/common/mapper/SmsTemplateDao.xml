@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.common.mapper.SmsTemplateDao">
+  <resultMap id="BaseResultMap" type="com.srct.service.account.dao.common.entity.SmsTemplate">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="send_sms_type" jdbcType="VARCHAR" property="sendSmsType" />
+    <result column="template_id" jdbcType="VARCHAR" property="templateId" />
+    <result column="paramer_number" jdbcType="INTEGER" property="paramerNumber" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="comfirm_at" jdbcType="TIMESTAMP" property="comfirmAt" />
+    <result column="comfirm_status" jdbcType="VARCHAR" property="comfirmStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    id, send_sms_type, template_id, paramer_number, body, author, comfirm_at, comfirm_status
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    update sa_sms_template
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="send_sms_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.sendSmsType,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="template_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.templateId,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="paramer_number = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.paramerNumber,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="body = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.body,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="author = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.author,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="comfirm_at = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.comfirmAt,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="comfirm_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.comfirmStatus,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    insert into sa_sms_template
+    (send_sms_type, template_id, paramer_number, body, author, comfirm_at, comfirm_status
+      )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.sendSmsType,jdbcType=VARCHAR}, #{item.templateId,jdbcType=VARCHAR}, #{item.paramerNumber,jdbcType=INTEGER}, 
+        #{item.body,jdbcType=VARCHAR}, #{item.author,jdbcType=VARCHAR}, #{item.comfirmAt,jdbcType=TIMESTAMP}, 
+        #{item.comfirmStatus,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.srct.service.account.dao.common.entity.SmsTemplate" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    insert into sa_sms_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      send_sms_type,
+      template_id,
+      paramer_number,
+      body,
+      author,
+      comfirm_at,
+      comfirm_status,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      #{sendSmsType,jdbcType=VARCHAR},
+      #{templateId,jdbcType=VARCHAR},
+      #{paramerNumber,jdbcType=INTEGER},
+      #{body,jdbcType=VARCHAR},
+      #{author,jdbcType=VARCHAR},
+      #{comfirmAt,jdbcType=TIMESTAMP},
+      #{comfirmStatus,jdbcType=VARCHAR},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      send_sms_type = #{sendSmsType,jdbcType=VARCHAR},
+      template_id = #{templateId,jdbcType=VARCHAR},
+      paramer_number = #{paramerNumber,jdbcType=INTEGER},
+      body = #{body,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      comfirm_at = #{comfirmAt,jdbcType=TIMESTAMP},
+      comfirm_status = #{comfirmStatus,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.srct.service.account.dao.common.entity.SmsTemplate" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:16 CST 2019.-->
+    insert into sa_sms_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="sendSmsType != null">
+        send_sms_type,
+      </if>
+      <if test="templateId != null">
+        template_id,
+      </if>
+      <if test="paramerNumber != null">
+        paramer_number,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="comfirmAt != null">
+        comfirm_at,
+      </if>
+      <if test="comfirmStatus != null">
+        comfirm_status,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sendSmsType != null">
+        #{sendSmsType,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="paramerNumber != null">
+        #{paramerNumber,jdbcType=INTEGER},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="comfirmAt != null">
+        #{comfirmAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comfirmStatus != null">
+        #{comfirmStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sendSmsType != null">
+        send_sms_type = #{sendSmsType,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        template_id = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="paramerNumber != null">
+        paramer_number = #{paramerNumber,jdbcType=INTEGER},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="comfirmAt != null">
+        comfirm_at = #{comfirmAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comfirmStatus != null">
+        comfirm_status = #{comfirmStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,6 +1,6 @@
 package com.srct.service.account.controller;
 
-import com.srct.service.account.service.IotTokenService;
+import com.srct.service.account.service.IotAuthService;
 import com.srct.service.account.vo.iot.IotBaseReq;
 import com.srct.service.account.vo.iot.IotBaseResp;
 import com.srct.service.account.vo.iot.IotFetchTokenResp;
@@ -36,7 +36,7 @@ import static com.srct.service.config.annotation.Auth.AuthType.NONE;
 public class IotController {
 
     @Resource
-    private IotTokenService iotTokenService;
+    private IotAuthService iotAuthService;
 
     @ApiOperation(value = "do something", notes = "业务接口")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -47,7 +47,7 @@ public class IotController {
     @ApiOperation(value = "确认token变更", notes = "向服务器确认token更新,废除老token,使新token生效")
     @RequestMapping(value = "/token/confirm", method = RequestMethod.POST)
     public ResponseEntity<CommonResponse<IotBaseResp>.Resp> confirm(IotTokenConfirmReq tokenConfirmReq) {
-        IotBaseResp res = iotTokenService.confirm(tokenConfirmReq);
+        IotBaseResp res = iotAuthService.confirm(tokenConfirmReq);
         return CommonExceptionHandler.generateResponse(res);
     }
 
@@ -55,7 +55,7 @@ public class IotController {
     @ApiOperation(value = "获取token", notes = "初始化过程中使用guid获取token")
     @RequestMapping(value = "/token", method = RequestMethod.GET)
     public ResponseEntity<CommonResponse<IotFetchTokenResp>.Resp> fetchToken(IotBaseReq iotBaseReq) {
-        IotFetchTokenResp res = iotTokenService.fetchToken(iotBaseReq);
+        IotFetchTokenResp res = iotAuthService.fetchToken(iotBaseReq);
         return CommonExceptionHandler.generateResponse(res);
     }
 }

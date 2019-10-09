@@ -9,7 +9,10 @@
  */
 package com.srct.service.account.service;
 
+import com.srct.service.account.dao.common.entity.User;
 import com.srct.service.account.vo.login.LoginRes;
+import com.srct.service.account.vo.platform.OpenPlatformAccessTokenResp;
+import com.srct.service.account.vo.platform.OpenPlatformRegResp;
 
 public interface LoginService {
 
@@ -28,7 +31,7 @@ public interface LoginService {
      * @param phoneNumber 手机号码
      * @return 登录返回信息
      */
-    LoginRes login(String phoneNumber);
+    LoginRes loginOrReg(String phoneNumber);
 
 
     /**
@@ -47,4 +50,39 @@ public interface LoginService {
      * @return 登录返回信息
      */
     LoginRes register(String userId, String password);
+
+    /**
+     * 创建新用户
+     *
+     * @param phoneNumber
+     * @param name
+     * @return
+     */
+    User createUserWithName(String phoneNumber, String name);
+
+    /**
+     * 接入开放平台注册.
+     *
+     * @return 开放平台信息
+     */
+    OpenPlatformRegResp registerOpenPlatform();
+
+
+    /**
+     * 获取新的appSecret
+     *
+     * @param appKey
+     * @return
+     */
+    OpenPlatformRegResp getOpenPlatformAppSecret(String appKey);
+
+    /**
+     * 开放平台获取accessToken
+     *
+     * @param appKey
+     * @param appSecret
+     * @return
+     */
+    OpenPlatformAccessTokenResp getOpenPlatformAccessToken(String appKey, String appSecret);
+
 }

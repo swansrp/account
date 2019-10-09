@@ -27,6 +27,8 @@ public enum AccountParamConst implements Param {
     IOT_TOKEN_EXPIRED,
     // IOT token期望更新周期
     IOT_TOKEN_UPDATE_EXPIRED,
+    // 开发接入平台Token有效期
+    PLATFORM_TOKEN_EXPIRED,
 
 
     // 密码输入错误锁定次数

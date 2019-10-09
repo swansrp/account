@@ -56,6 +56,13 @@ public interface TokenService {
     String buildIotToken();
 
     /**
+     * 获取开放平台 token
+     *
+     * @return open platform Token string
+     */
+    String buildOpenPlatformToken();
+
+    /**
      * 获取token map中itemKey内容
      *
      * @param <T>             the type parameter

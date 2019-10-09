@@ -10,10 +10,11 @@
 package com.srct.service.account.service.impl;
 
 import com.srct.service.account.constants.common.RequestConst;
-import com.srct.service.account.dao.entity.Permit;
+import com.srct.service.account.dao.common.entity.Permit;
 import com.srct.service.account.provider.TokenItemProvider;
 import com.srct.service.account.service.AuthTokenService;
 import com.srct.service.account.service.TokenService;
+import com.srct.service.account.utils.AuthStringUtil;
 import com.srct.service.account.utils.TokenTypeUtil;
 import com.srct.service.config.annotation.Auth;
 import com.srct.service.config.holder.ClientTypeHolder;
@@ -26,6 +27,7 @@ import com.srct.service.utils.StringUtil;
 import com.srct.service.validate.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,7 +56,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         String queryString = request.getQueryString();
         Map<String, String> headersInfoMap = HttpUtil.getHeadersInfoMap(request);
         ClientTypeHolder.set(headersInfoMap.get(RequestConst.CLIENT_TYPE));
-        String userId = headersInfoMap.get(RequestConst.USER_ID);
+        String userId = getUserId(headersInfoMap);
         traceRequest(method, url, queryString, userId, authType);
         if (!Auth.AuthType.NONE.equals(authType)) {
             authType = updateAuthTypeByServiceApi(method, url, headersInfoMap, authType);
@@ -62,16 +64,13 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         validateAuthType(method, url, headersInfoMap, authType);
     }
 
-    @Override
-    public void enableCrossDomain(HttpServletResponse response) {
-        String url = request.getRequestURI();
-        String method = request.getMethod();
-        String queryString = request.getQueryString();
-        Map<String, String> headersInfoMap = HttpUtil.getHeadersInfoMap(request);
-        log.info("[{}] {}?{}", method, url, queryString);
-        log.info("Header: {}", JSONUtil.toJSONString(headersInfoMap));
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Headers", RequestConst.getAllHeader());
+    private String getUserId(Map<String, String> headersInfoMap) {
+        Map<String, String> authorizationMap = AuthStringUtil.decodeAuthorization(request);
+        String userId = headersInfoMap.get(RequestConst.USER_ID);
+        if (StringUtils.isEmpty(userId)) {
+            userId = authorizationMap.get(RequestConst.APP_KEY);
+        }
+        return userId;
     }
 
     private void traceRequest(String method, String url, String queryString, String userId, Auth.AuthType authType) {
@@ -117,10 +116,10 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private void validateLogin(Map<String, String> headersInfoMap) {
         validateLoginToken(headersInfoMap);
         String token = headersInfoMap.get(RequestConst.TOKEN);
-        String userId = headersInfoMap.get(RequestConst.USER_ID);
+        String userId = getUserId(headersInfoMap);
         Validator.assertNotBlank(userId, ErrCodeSys.PA_PARAM_NULL, "登录用户名");
         String operator = tokenService.getItem(token, tokenItem.getOperator(), String.class);
-        Validator.assertMatch(userId, operator, ErrCodeSys.SYS_SESSION_NOT_SAME);
+        Validator.assertMatch(userId, operator, ErrCodeSys.SYS_SESSION_NOT_SAME, "用户名");
     }
 
     private void validatePermit(String method, String url, Map<String, String> headersInfoMap) {
@@ -158,5 +157,17 @@ public class AuthTokenServiceImpl implements AuthTokenService {
             }
         }
         return false;
+    }
+
+    @Override
+    public void enableCrossDomain(HttpServletResponse response) {
+        String url = request.getRequestURI();
+        String method = request.getMethod();
+        String queryString = request.getQueryString();
+        Map<String, String> headersInfoMap = HttpUtil.getHeadersInfoMap(request);
+        log.info("[{}] {}?{}", method, url, queryString);
+        log.info("Header: {}", JSONUtil.toJSONString(headersInfoMap));
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", RequestConst.getAllHeader());
     }
 }

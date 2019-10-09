@@ -11,10 +11,10 @@ package com.srct.service.account.service.impl;
 
 import com.srct.service.account.bo.permit.PermitBO;
 import com.srct.service.account.constants.token.TokenItemConst;
-import com.srct.service.account.dao.entity.Permit;
-import com.srct.service.account.dao.repository.PermitService;
-import com.srct.service.account.dao.repository.RolePermitService;
-import com.srct.service.account.dao.repository.UserPermitService;
+import com.srct.service.account.dao.common.entity.Permit;
+import com.srct.service.account.dao.common.repository.PermitService;
+import com.srct.service.account.dao.common.repository.RolePermitService;
+import com.srct.service.account.dao.common.repository.UserPermitService;
 import com.srct.service.account.service.PermitCoreService;
 import com.srct.service.account.service.TokenService;
 import com.srct.service.account.vo.permit.PermitRes;

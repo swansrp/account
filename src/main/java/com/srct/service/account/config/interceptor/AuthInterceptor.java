@@ -1,7 +1,7 @@
 package com.srct.service.account.config.interceptor;
 
 import com.srct.service.account.service.AuthTokenService;
-import com.srct.service.account.service.IotTokenService;
+import com.srct.service.account.service.IotAuthService;
 import com.srct.service.config.annotation.Auth;
 import com.srct.service.config.holder.ClientTypeHolder;
 import com.srct.service.config.holder.TokenHolder;
@@ -31,7 +31,7 @@ public class AuthInterceptor extends AuthBaseInterceptor {
     private AuthTokenService authTokenService;
 
     @Resource
-    private IotTokenService iotTokenService;
+    private IotAuthService iotAuthService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -52,7 +52,7 @@ public class AuthInterceptor extends AuthBaseInterceptor {
             authType = auth.role();
         }
         if (authType.equals(Auth.AuthType.IOT)) {
-            iotTokenService.validate(request, response);
+            iotAuthService.validate(request, response);
         } else {
             authTokenService.validate(request, response, authType);
         }

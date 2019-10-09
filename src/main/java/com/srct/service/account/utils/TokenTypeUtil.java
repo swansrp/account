@@ -20,6 +20,10 @@ public class TokenTypeUtil {
                 return TokenTypeConst.WEB_ACCESS_TOKEN.name();
             case APP:
                 return TokenTypeConst.APP_ACCESS_TOKEN.name();
+            case IOT:
+                return TokenTypeConst.IOT_TOKEN.name();
+            case PLATFORM:
+                return TokenTypeConst.PLATFORM_TOKEN.name();
             default:
                 return null;
         }

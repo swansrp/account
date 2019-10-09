@@ -16,6 +16,9 @@ public class RequestConst {
     public static final String AUTHORIZATION = "authorization";
     public static final String CLIENT_TYPE = "client-type";
 
+    public static final String APP_KEY = "appKey";
+    public static final String APP_SECRET = "appSecret";
+
     public static final String CONTENT_TYPE = "content-type";
 
     public static final String SERVICE_API = "serviceApi";

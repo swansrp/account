@@ -9,7 +9,7 @@
  */
 package com.srct.service.account.service;
 
-import com.srct.service.account.dao.entity.Role;
+import com.srct.service.account.dao.common.entity.Role;
 
 import java.util.List;
 
@@ -19,9 +19,18 @@ public interface AuthRoleService {
      *
      * @param userId 用户登录名
      * @param roleId 角色Id
-     * @return 登录返回信息
+     * @return
      */
     void bindUserRole(String userId, Integer roleId);
+
+    /**
+     * 解除绑定用户角色.
+     *
+     * @param userId 用户登录名
+     * @param roleId 角色Id
+     * @return
+     */
+    void unbindUserRole(String userId, Integer roleId);
 
     /**
      * 获取用户角色列表(多角色).
@@ -38,4 +47,12 @@ public interface AuthRoleService {
      * @return 登录role角色
      */
     Role getRoleByUserId(String userId);
+
+    /**
+     * 获取下属role 列表
+     *
+     * @param parentRoleId
+     * @return
+     */
+    List<Role> getSubRoleList(Integer parentRoleId);
 }

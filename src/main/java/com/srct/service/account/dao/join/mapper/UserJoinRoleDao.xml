@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.join.mapper.UserJoinRoleDao">
+
+    <resultMap extends="com.srct.service.account.dao.common.mapper.RoleDao.JoinResultMap" id="RoleWithUserList"
+               type="com.srct.service.account.dao.join.entity.RoleWithUserList">
+        <collection property="userList" resultMap="com.srct.service.account.dao.common.mapper.UserDao.JoinResultMap"/>
+    </resultMap>
+
+    <resultMap id="UserWithRoleList"
+               type="com.srct.service.account.dao.join.entity.UserWithRoleList"
+               extends="com.srct.service.account.dao.common.mapper.UserDao.JoinResultMap">
+        <collection property="roleList" resultMap="com.srct.service.account.dao.common.mapper.RoleDao.JoinResultMap"/>
+    </resultMap>
+
+    <select id="selectRoleWithUserListByRoleId"
+            resultMap="RoleWithUserList">
+        select
+        <include refid="com.srct.service.account.dao.common.mapper.RoleDao.Join_Column_List"/>,
+        <include refid="com.srct.service.account.dao.common.mapper.UserDao.Join_Column_List"/>
+        from ac_user_role
+        join ac_role on ac_user_role.role_id = ac_role.id
+        join ac_user on ac_user_role.user_id = ac_user.id
+        where
+        ac_user_role.valid = 1
+        and ac_user.valid = 1
+        and ac_role.valid = 1
+        and ac_role.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectUserWithRoleListByUserId"
+            resultMap="UserWithRoleList">
+        select
+        <include refid="com.srct.service.account.dao.common.mapper.UserDao.Join_Column_List"/>,
+        <include refid="com.srct.service.account.dao.common.mapper.RoleDao.Join_Column_List"/>
+
+        from ac_user_role
+        join ac_role on ac_user_role.role_id = ac_role.id
+        join ac_user on ac_user_role.user_id = ac_user.id
+        where
+        ac_user_role.valid = 1
+        and ac_user.valid = 1
+        and ac_role.valid = 1
+        and ac_user.user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUserWithRoleListByPhoneNumber"
+            resultMap="UserWithRoleList">
+        select
+        <include refid="com.srct.service.account.dao.common.mapper.UserDao.Join_Column_List"/>,
+        <include refid="com.srct.service.account.dao.common.mapper.RoleDao.Join_Column_List"/>
+
+        from ac_user_role
+        join ac_role on ac_user_role.role_id = ac_role.id
+        join ac_user on ac_user_role.user_id = ac_user.id
+        where
+        ac_user_role.valid = 1
+        and ac_user.valid = 1
+        and ac_role.valid = 1
+        and ac_user.phone = #{phoneNumber,jdbcType=VARCHAR}
+    </select>
+</mapper>

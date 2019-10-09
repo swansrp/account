@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.common.mapper.UserPermitDao">
+    <resultMap id="BaseResultMap" type="com.srct.service.account.dao.common.entity.Permit">
+        <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="parent_permit_id" jdbcType="INTEGER" property="parentPermitId"/>
+        <result column="permit_type" jdbcType="VARCHAR" property="permitType"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="key" jdbcType="VARCHAR" property="key"/>
+        <result column="client_type" jdbcType="VARCHAR" property="clientType"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="show_name" jdbcType="VARCHAR" property="showName"/>
+        <result column="show_order" jdbcType="INTEGER" property="showOrder"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="valid" jdbcType="TINYINT" property="valid"/>
+    </resultMap>
+    <select id="selectPermitByUserIdAndClientType" resultMap="BaseResultMap">
+        SELECT ac_permit.id,
+               ac_permit.parent_permit_id,
+               ac_permit.name,
+               ac_permit.permit_type,
+               ac_permit.key,
+               ac_permit.client_type,
+               ac_permit.url,
+               ac_permit.show_name,
+               ac_permit.show_order,
+               ac_permit.status,
+               ac_permit.create_time,
+               ac_permit.last_update_time,
+               ac_permit.icon,
+               ac_permit.valid
+        FROM ac_user
+                 JOIN ac_user_role ON ac_user.id = ac_user_role.user_id
+                 JOIN ac_role_permit ON ac_role_permit.role_id = ac_user_role.ROLE_ID
+                 JOIN ac_permit ON ac_permit.id = ac_role_permit.permit_id
+        WHERE ac_user.user_id = #{userId, jdbcType=VARCHAR}
+          AND ac_user_role.valid = 1
+          AND ac_role_permit.valid = 1
+          AND ac_permit.valid = 1
+          AND ac_permit.status = '1'
+        <if test="clientType != null">
+          AND ac_permit.client_type = #{clientType, jdbcType=VARCHAR}
+        </if>
+        order by ac_permit.show_order
+    </select>
+</mapper>
+

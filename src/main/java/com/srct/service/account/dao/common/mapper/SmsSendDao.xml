@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.common.mapper.SmsSendDao">
+  <resultMap id="BaseResultMap" type="com.srct.service.account.dao.common.entity.SmsSend">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    <id column="send_id" jdbcType="VARCHAR" property="sendId" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="send_msg" jdbcType="VARCHAR" property="sendMsg" />
+    <result column="send_status" jdbcType="VARCHAR" property="sendStatus" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="send_result" jdbcType="VARCHAR" property="sendResult" />
+    <result column="send_type" jdbcType="VARCHAR" property="sendType" />
+    <result column="template_id" jdbcType="VARCHAR" property="templateId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    send_id, mobile, send_msg, send_status, send_time, send_result, send_type, template_id
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    update sa_sms_send
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="mobile = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.mobile,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="send_msg = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.sendMsg,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="send_status = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.sendStatus,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="send_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.sendTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="send_result = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.sendResult,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="send_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.sendType,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="template_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when send_id = #{item.sendId,jdbcType=VARCHAR} then #{item.templateId,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+    </trim>
+    where send_id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.sendId,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    insert into sa_sms_send
+    (send_id, mobile, send_msg, send_status, send_time, send_result, send_type, template_id
+      )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.sendId,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, #{item.sendMsg,jdbcType=VARCHAR}, 
+        #{item.sendStatus,jdbcType=VARCHAR}, #{item.sendTime,jdbcType=TIMESTAMP}, #{item.sendResult,jdbcType=VARCHAR}, 
+        #{item.sendType,jdbcType=VARCHAR}, #{item.templateId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" parameterType="com.srct.service.account.dao.common.entity.SmsSend">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    insert into sa_sms_send
+    (send_id, mobile, send_msg, send_status, send_time, send_result, send_type, template_id
+      )
+    values
+    (#{sendId,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{sendMsg,jdbcType=VARCHAR}, 
+      #{sendStatus,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP}, #{sendResult,jdbcType=VARCHAR}, 
+      #{sendType,jdbcType=VARCHAR}, #{templateId,jdbcType=VARCHAR})
+    on duplicate key update 
+    send_id = #{sendId,jdbcType=VARCHAR}, 
+    mobile = #{mobile,jdbcType=VARCHAR}, 
+    send_msg = #{sendMsg,jdbcType=VARCHAR}, 
+    send_status = #{sendStatus,jdbcType=VARCHAR}, 
+    send_time = #{sendTime,jdbcType=TIMESTAMP}, 
+    send_result = #{sendResult,jdbcType=VARCHAR}, 
+    send_type = #{sendType,jdbcType=VARCHAR}, 
+    template_id = #{templateId,jdbcType=VARCHAR}
+  </insert>
+  <insert id="insertOrUpdateSelective" parameterType="com.srct.service.account.dao.common.entity.SmsSend">
+    <!--@mbg.generated generated on Wed Aug 07 11:36:25 CST 2019.-->
+    insert into sa_sms_send
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sendId != null">
+        send_id,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="sendMsg != null">
+        send_msg,
+      </if>
+      <if test="sendStatus != null">
+        send_status,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="sendResult != null">
+        send_result,
+      </if>
+      <if test="sendType != null">
+        send_type,
+      </if>
+      <if test="templateId != null">
+        template_id,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sendId != null">
+        #{sendId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sendMsg != null">
+        #{sendMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null">
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendResult != null">
+        #{sendResult,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        #{sendType,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="sendId != null">
+        send_id = #{sendId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sendMsg != null">
+        send_msg = #{sendMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null">
+        send_status = #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendResult != null">
+        send_result = #{sendResult,jdbcType=VARCHAR},
+      </if>
+      <if test="sendType != null">
+        send_type = #{sendType,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        template_id = #{templateId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

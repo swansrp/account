@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srct.service.account.dao.common.mapper.PermitDao">
+  <resultMap id="BaseResultMap" type="com.srct.service.account.dao.common.entity.Permit">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="parent_permit_id" jdbcType="INTEGER" property="parentPermitId" />
+    <result column="permit_type" jdbcType="VARCHAR" property="permitType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="key" jdbcType="VARCHAR" property="key" />
+    <result column="client_type" jdbcType="VARCHAR" property="clientType" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="show_name" jdbcType="VARCHAR" property="showName" />
+    <result column="show_order" jdbcType="INTEGER" property="showOrder" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="valid" jdbcType="TINYINT" property="valid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    id, parent_permit_id, permit_type, `name`, `key`, client_type, url, show_name, show_order, 
+    `status`, create_time, last_update_time, icon, `valid`
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    update ac_permit
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="parent_permit_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.parentPermitId,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="permit_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.permitType,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`name` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`key` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.key,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="client_type = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.clientType,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="url = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.url,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="show_name = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.showName,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="show_order = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.showOrder,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="`status` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.status,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="last_update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="icon = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.icon,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="`valid` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.valid,jdbcType=TINYINT}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    insert into ac_permit
+    (parent_permit_id, permit_type, `name`, `key`, client_type, url, show_name, show_order, 
+      `status`, create_time, last_update_time, icon, `valid`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.parentPermitId,jdbcType=INTEGER}, #{item.permitType,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
+        #{item.key,jdbcType=VARCHAR}, #{item.clientType,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, 
+        #{item.showName,jdbcType=VARCHAR}, #{item.showOrder,jdbcType=INTEGER}, #{item.status,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.lastUpdateTime,jdbcType=TIMESTAMP}, 
+        #{item.icon,jdbcType=VARCHAR}, #{item.valid,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.srct.service.account.dao.common.entity.Permit" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    insert into ac_permit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      parent_permit_id,
+      permit_type,
+      `name`,
+      `key`,
+      client_type,
+      url,
+      show_name,
+      show_order,
+      `status`,
+      create_time,
+      last_update_time,
+      icon,
+      `valid`,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      #{parentPermitId,jdbcType=INTEGER},
+      #{permitType,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{key,jdbcType=VARCHAR},
+      #{clientType,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR},
+      #{showName,jdbcType=VARCHAR},
+      #{showOrder,jdbcType=INTEGER},
+      #{status,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{lastUpdateTime,jdbcType=TIMESTAMP},
+      #{icon,jdbcType=VARCHAR},
+      #{valid,jdbcType=TINYINT},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      parent_permit_id = #{parentPermitId,jdbcType=INTEGER},
+      permit_type = #{permitType,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      `key` = #{key,jdbcType=VARCHAR},
+      client_type = #{clientType,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      show_name = #{showName,jdbcType=VARCHAR},
+      show_order = #{showOrder,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      icon = #{icon,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.srct.service.account.dao.common.entity.Permit" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Fri Aug 02 17:55:39 CST 2019.-->
+    insert into ac_permit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentPermitId != null">
+        parent_permit_id,
+      </if>
+      <if test="permitType != null">
+        permit_type,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="key != null">
+        `key`,
+      </if>
+      <if test="clientType != null">
+        client_type,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="showName != null">
+        show_name,
+      </if>
+      <if test="showOrder != null">
+        show_order,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastUpdateTime != null">
+        last_update_time,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="valid != null">
+        `valid`,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentPermitId != null">
+        #{parentPermitId,jdbcType=INTEGER},
+      </if>
+      <if test="permitType != null">
+        #{permitType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="key != null">
+        #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="clientType != null">
+        #{clientType,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null">
+        #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="showOrder != null">
+        #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null">
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        #{valid,jdbcType=TINYINT},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentPermitId != null">
+        parent_permit_id = #{parentPermitId,jdbcType=INTEGER},
+      </if>
+      <if test="permitType != null">
+        permit_type = #{permitType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="key != null">
+        `key` = #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="clientType != null">
+        client_type = #{clientType,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null">
+        show_name = #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="showOrder != null">
+        show_order = #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null">
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        `valid` = #{valid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

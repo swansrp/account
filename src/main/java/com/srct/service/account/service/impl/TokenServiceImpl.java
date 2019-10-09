@@ -71,6 +71,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public String buildOpenPlatformToken() {
+        return buildToken(TokenTypeConst.PLATFORM_TOKEN);
+    }
+
+    @Override
     public <T> T getItem(String token, String itemKey, Class<?> collectionClass, Class<?>... elementClasses) {
         Map<String, Object> map = getTokenValue(token);
         Validator.assertNotEmpty(map, ErrCodeSys.PA_DATA_NOT_EXIST, "token内容");

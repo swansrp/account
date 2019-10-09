@@ -1,0 +1,39 @@
+@startuml
+Actor "用户" as user
+participant  "WEB/APP" as view order 50
+participant  "DEVICE" as iot order 60
+participant  "SERVER" as back order 100
+participant  "REDIS" as redis order 150
+participant  "DATABASE" as db order 200
+
+
+iot->back: func?token=&deviceId=
+back->redis: 查询token是否过期
+redis-->back: 检查token状态
+alt token有效
+back-->iot: 返回结果
+else token更新
+back-->iot: 新token
+iot->back: 收到新token 老token=&新token=
+back->redis: 过期老token,新token生效
+redis-->back
+back-->iot: 更新成功
+else token失效
+back->db: 设备是否初始化状态(deviceId)
+db-->back
+alt 初始化状态
+back-->iot: 新token
+iot->back: 收到新token 老token=&新token=
+back->redis: 过期老token,新token生效
+redis-->back
+back-->iot: 更新成功
+else
+back-->iot: 设备已过期,请管理员重置链接状态
+end
+end
+view->back: 重置链接状态?deviceId=
+back->db:
+db-->back:
+back-->view:
+
+@enduml
